@@ -1,82 +1,42 @@
-# my-service serverless API
-The my-service project, created with [`aws-serverless-java-container`](https://github.com/aws/serverless-java-container).
+---
 
-The starter project defines a simple `/ping` resource that can accept `GET` requests with its tests.
+# 🔗 **Serverless Link Shortener**
 
-The project folder also includes a `template.yml` file. You can use this [SAM](https://github.com/awslabs/serverless-application-model) file to deploy the project to AWS Lambda and Amazon API Gateway or test in local with the [SAM CLI](https://github.com/awslabs/aws-sam-cli). 
+Este projeto é uma implementação robusta e escalável de um encurtador de links, construído com um foco em **arquitetura serverless** e utilizando um conjunto de tecnologias modernas e de alto desempenho. Desenvolvido para demonstrar proficiência em sistemas distribuídos e computação em nuvem, este serviço oferece uma solução eficiente para transformar URLs longas em links curtos e gerenciáveis.
 
-## Pre-requisites
-* [AWS CLI](https://aws.amazon.com/cli/)
-* [SAM CLI](https://github.com/awslabs/aws-sam-cli)
-* [Gradle](https://gradle.org/) or [Maven](https://maven.apache.org/)
+---
 
-## Building the project
-You can use the SAM CLI to quickly build the project
-```bash
-$ mvn archetype:generate -DartifactId=my-service -DarchetypeGroupId=com.amazonaws.serverless.archetypes -DarchetypeArtifactId=aws-serverless-jersey-archetype -DarchetypeVersion=2.0.1 -DgroupId=my.service -Dversion=1.0-SNAPSHOT -Dinteractive=false
-$ cd my-service
-$ sam build
-Building resource 'MyServiceFunction'
-Running JavaGradleWorkflow:GradleBuild
-Running JavaGradleWorkflow:CopyArtifacts
+## 🚀 **Tecnologias Utilizadas (e Minhas Habilidades em Destaque)**
 
-Build Succeeded
+Este projeto foi meticulosamente elaborado para showcase uma ampla gama de habilidades técnicas, incluindo:
 
-Built Artifacts  : .aws-sam/build
-Built Template   : .aws-sam/build/template.yaml
+### ☕ **Java Spring 21**
+A base da aplicação é construída com **Java 21**, a versão mais recente do Java LTS, aproveitando suas melhorias de desempenho e novas funcionalidades. A escolha do **Spring Framework** na sua versão mais recente demonstra minha capacidade de desenvolver aplicações robustas e escaláveis, utilizando o ecossistema Spring para injeção de dependências, configuração e gerenciamento de transações. Meu domínio em Spring permite a criação de APIs RESTful eficientes e a integração de diversos serviços.
 
-Commands you can use next
-=========================
-[*] Invoke Function: sam local invoke
-[*] Deploy: sam deploy --guided
-```
+### ☁️ **Spring Cloud Function**
+Para habilitar a arquitetura serverless, utilizei **Spring Cloud Function**. Esta framework é crucial para a portabilidade do código para diferentes provedores de nuvem, permitindo que a mesma lógica de negócio seja executada como uma função serverless. Isso destaca minha experiência em construir aplicações agnósticas à infraestrutura, prontas para serem implantadas em ambientes de computação em nuvem sem sacrificar a flexibilidade.
 
-## Testing locally with the SAM CLI
+### ⚡ **AWS Lambda**
+A implantação do serviço é realizada via **AWS Lambda**, um serviço de computação serverless que executa o código em resposta a eventos. Minha experiência com AWS Lambda inclui o empacotamento e a otimização de funções Java para execução eficiente, bem como a configuração de triggers e gerenciamento de permissões. Isso valida minha habilidade em projetar e implementar soluções nativas da nuvem que se beneficiam da escalabilidade automática e do modelo de pagamento por uso.
 
-From the project root folder - where the `template.yml` file is located - start the API with the SAM CLI.
+### 🐳 **Docker Compose**
+Para um ambiente de desenvolvimento local consistente e simplificado, o projeto utiliza **Docker Compose**. Isso permite que todos os serviços dependentes (como o DynamoDB local) sejam facilmente inicializados com um único comando. Meu uso do Docker Compose reflete minha proficiência em contêineres e na criação de ambientes de desenvolvimento reproduzíveis, garantindo que o projeto possa ser executado em qualquer máquina com as dependências corretas pré-configuradas.
 
-```bash
-$ sam local start-api
+### 🗄️ **DynamoDB**
+Como banco de dados NoSQL, o **Amazon DynamoDB** foi escolhido por sua escalabilidade, baixa latência e alta disponibilidade, características ideais para uma arquitetura serverless. Minha experiência com DynamoDB abrange a modelagem de dados NoSQL, a escrita de consultas eficientes e o gerenciamento de tabelas. Isso demonstra minha capacidade de selecionar e utilizar bancos de dados que se alinham com os requisitos de desempenho e escalabilidade de aplicações distribuídas.
 
-...
-Mounting com.amazonaws.serverless.archetypes.StreamLambdaHandler::handleRequest (java11) at http://127.0.0.1:3000/{proxy+} [OPTIONS GET HEAD POST PUT DELETE PATCH]
-...
-```
+### 🔒 **Spring Security**
+A segurança é uma prioridade, e **Spring Security** foi implementado para proteger as APIs e garantir que apenas usuários autorizados possam interagir com o serviço. Minha proficiência em Spring Security inclui a configuração de autenticação (JWT ou OAuth2) e autorização baseada em roles, protegendo endpoints específicos e garantindo a integridade dos dados. Isso evidencia minha capacidade de construir aplicações seguras e aderir às melhores práticas de segurança.
 
-Using a new shell, you can send a test ping request to your API:
+### ☁️ **Arquitetura Serverless**
+O projeto é um exemplo prático de **arquitetura serverless**, minimizando a sobrecarga operacional e otimizando o custo. Minha expertise em serverless se estende ao design de soluções que se beneficiam do desacoplamento de serviços, da escalabilidade sob demanda e da resilição inerente a este paradigma. Isso demonstra minha visão arquitetural para construir sistemas modernos e eficientes.
 
-```bash
-$ curl -s http://127.0.0.1:3000/ping | python -m json.tool
+---
 
-{
-    "pong": "Hello, World!"
-}
-``` 
+## 🏗️ **Estrutura do Projeto (Arquitetura Hexagonal)**
 
-## Deploying to AWS
-To deploy the application in your AWS account, you can use the SAM CLI's guided deployment process and follow the instructions on the screen
+Este projeto adota a **Arquitetura Hexagonal (Ports and Adapters)** para garantir um alto nível de separação de preocupações, testabilidade e manutenibilidade. Essa abordagem permite que o domínio da aplicação seja independente de tecnologias específicas de infraestrutura ou interfaces externas. Minha escolha por essa arquitetura destaca minha habilidade em projetar sistemas com:
 
-```
-$ sam deploy --guided
-```
-
-Once the deployment is completed, the SAM CLI will print out the stack's outputs, including the new application URL. You can use `curl` or a web browser to make a call to the URL
-
-```
-...
--------------------------------------------------------------------------------------------------------------
-OutputKey-Description                        OutputValue
--------------------------------------------------------------------------------------------------------------
-MyServiceApi - URL for application            https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/Prod/pets
--------------------------------------------------------------------------------------------------------------
-```
-
-Copy the `OutputValue` into a browser or use curl to test your first request:
-
-```bash
-$ curl -s https://xxxxxxx.execute-api.us-west-2.amazonaws.com/Prod/ping | python -m json.tool
-
-{
-    "pong": "Hello, World!"
-}
-```
+* **Baixo acoplamento**: As dependências externas são gerenciadas através de interfaces (ports) e implementações (adapters), isolando a lógica de negócio central.
+* **Alta coesão**: As responsabilidades são bem definidas dentro de cada camada.
+* **Facilidade de teste**: O domínio pode ser testado isoladamente, sem a necessidade de infraestrutura real.
