@@ -1,5 +1,7 @@
 package dev.senna.core.domain;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -54,5 +56,9 @@ public class UserDomain {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void encodePassword(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.password = bCryptPasswordEncoder.encode(this.password);
     }
 }

@@ -10,10 +10,12 @@ import java.net.URI;
 @Configuration
 public class DynamoDbConfig {
 
+    private final String localStackUrl = "http://localstack-main:4566";
+
     @Bean
     public DynamoDbClient dynamoDbClient() {
         return DynamoDbClient.builder()
-                .endpointOverride(URI.create("https://localhost:4566"))
+                .endpointOverride(URI.create(localStackUrl))
                 .region(Region.SA_EAST_1)
                 .build();
     }
