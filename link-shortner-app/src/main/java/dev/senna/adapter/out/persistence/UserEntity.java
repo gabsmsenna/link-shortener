@@ -5,6 +5,7 @@ import dev.senna.core.domain.UserDomain;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -12,6 +13,8 @@ import java.util.UUID;
 @DynamoDbBean
 @TableName(name = "tb_users")
 public class UserEntity {
+
+    public static final String EMAIL_INDEX = "email-index";
 
     private UUID userId;
 
@@ -52,6 +55,7 @@ public class UserEntity {
     }
 
     @DynamoDbAttribute("email")
+    @DynamoDbSecondaryPartitionKey(indexNames = EMAIL_INDEX)
     public String getEmail() {
         return email;
     }
@@ -94,5 +98,16 @@ public class UserEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public UserDomain toDomain() {
+        return new UserDomain(
+                this.userId,
+                this.email,
+                this.password,
+                this.nickname,
+                this.createdAt,
+                this.updatedAt
+        );
     }
 }

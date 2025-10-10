@@ -1,6 +1,7 @@
 package dev.senna.core.usecase;
 
 import dev.senna.core.domain.UserDomain;
+import dev.senna.core.exception.UserAlreadyExistsException;
 import dev.senna.core.port.in.CreateUserPortIn;
 import dev.senna.core.port.out.UserRepositoryPortOut;
 import org.slf4j.Logger;
@@ -25,10 +26,18 @@ public class CreateUserUseCase implements CreateUserPortIn {
     public UserDomain execute(UserDomain user) {
         logger.info("Creating user {}", user.getNickname());
 
+        var userByEmail = userRepositoryPortOut.findByEmail(user.getEmail());
+
+        if (userByEmail.isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
         user.encodePassword(bCryptPasswordEncoder);
 
         var userCreated =  userRepositoryPortOut.save(user);
+
         logger.info("User created {}", userCreated.getUserId());
+
         return userCreated;
     }
 }
