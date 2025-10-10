@@ -1,5 +1,6 @@
 package dev.senna.adapter.out.persistence;
 
+import dev.senna.config.TableName;
 import dev.senna.core.domain.UserDomain;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @DynamoDbBean
+@TableName(name = "tb_users")
 public class UserEntity {
 
     private UUID userId;

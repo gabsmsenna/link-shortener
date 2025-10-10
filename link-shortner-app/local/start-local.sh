@@ -8,7 +8,7 @@ echo "Done waiting."
 # Create Table
 aws --endpoint="http://localhost:4566" dynamodb create-table \
   --region "sa-east-1" \
-  --table-name "user_entity" \
+  --table-name "tb_users" \
   --attribute-definitions \
     "AttributeName=user_id,AttributeType=S" \
   --key-schema \
