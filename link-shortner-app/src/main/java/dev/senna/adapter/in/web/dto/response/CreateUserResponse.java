@@ -1,4 +1,4 @@
-package dev.senna.adapter.in.web.dto;
+package dev.senna.adapter.in.web.dto.response;
 
 import dev.senna.core.domain.UserDomain;
 

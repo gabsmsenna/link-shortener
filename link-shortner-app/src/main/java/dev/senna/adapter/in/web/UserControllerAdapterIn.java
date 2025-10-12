@@ -1,7 +1,7 @@
 package dev.senna.adapter.in.web;
 
-import dev.senna.adapter.in.web.dto.CreateUserReq;
-import dev.senna.adapter.in.web.dto.CreateUserResponse;
+import dev.senna.adapter.in.web.dto.request.CreateUserRequest;
+import dev.senna.adapter.in.web.dto.response.CreateUserResponse;
 import dev.senna.core.port.in.CreateUserPortIn;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class UserControllerAdapterIn {
     }
 
     @PostMapping()
-    public ResponseEntity<CreateUserResponse> createUser(@RequestBody @Valid CreateUserReq req) {
+    public ResponseEntity<CreateUserResponse> createUser(@RequestBody @Valid CreateUserRequest req) {
 
         var userCreated = createUserPortIn.execute(req.toDomain());
 
