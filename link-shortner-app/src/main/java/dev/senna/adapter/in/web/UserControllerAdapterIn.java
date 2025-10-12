@@ -3,13 +3,14 @@ package dev.senna.adapter.in.web;
 import dev.senna.adapter.in.web.dto.request.CreateUserRequest;
 import dev.senna.adapter.in.web.dto.response.CreateUserResponse;
 import dev.senna.core.port.in.CreateUserPortIn;
+import dev.senna.core.port.in.DeleteUserPortIn;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
+import java.util.UUID;
 
 
 @RestController()
@@ -17,9 +18,11 @@ import java.net.URI;
 public class UserControllerAdapterIn {
 
     private final CreateUserPortIn createUserPortIn;
+    private final DeleteUserPortIn deleteUserPortIn;
 
-    public UserControllerAdapterIn(CreateUserPortIn createUserPortIn) {
+    public UserControllerAdapterIn(CreateUserPortIn createUserPortIn, DeleteUserPortIn deleteUserPortIn) {
         this.createUserPortIn = createUserPortIn;
+        this.deleteUserPortIn = deleteUserPortIn;
     }
 
     @PostMapping()
@@ -30,5 +33,15 @@ public class UserControllerAdapterIn {
         var body = CreateUserResponse.fromDomain(userCreated);
 
         return ResponseEntity.created(URI.create("/")).body(body);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(JwtAuthenticationToken token) {
+
+        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
+
+        deleteUserPortIn.execute(UUID.fromString(userId));
+
+        return ResponseEntity.noContent().build();
     }
 }

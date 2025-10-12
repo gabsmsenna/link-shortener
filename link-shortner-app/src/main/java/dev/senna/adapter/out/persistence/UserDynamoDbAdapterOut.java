@@ -4,11 +4,13 @@ import dev.senna.core.domain.UserDomain;
 import dev.senna.core.port.out.UserRepositoryPortOut;
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static dev.senna.adapter.out.persistence.UserEntity.EMAIL_INDEX;
 
@@ -46,5 +48,27 @@ public class UserDynamoDbAdapterOut implements UserRepositoryPortOut {
                 .flatMap(userEntityPage -> userEntityPage.items().stream())
                 .map(UserEntity::toDomain)
                 .findFirst();
+    }
+
+    @Override
+    public void deleteById(UUID userId) {
+
+        var key = Key.builder()
+                        .partitionValue(userId.toString())
+                        .build();
+
+        dynamoDbTemplate.delete(key, UserEntity.class);
+    }
+
+    @Override
+    public Optional<UserDomain> findById(UUID userId) {
+
+        var key = Key.builder()
+                .partitionValue(userId.toString())
+                .build();
+
+        var user = dynamoDbTemplate.load(key, UserEntity.class);
+
+        return user == null ? Optional.empty() : Optional.of(user.toDomain());
     }
 }
