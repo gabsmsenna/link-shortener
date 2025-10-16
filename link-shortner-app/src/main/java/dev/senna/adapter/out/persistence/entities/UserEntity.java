@@ -1,4 +1,4 @@
-package dev.senna.adapter.out.persistence;
+package dev.senna.adapter.out.persistence.entities;
 
 import dev.senna.config.TableName;
 import dev.senna.core.domain.UserDomain;
@@ -10,11 +10,11 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecon
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static dev.senna.config.Constants.EMAIL_INDEX;
+
 @DynamoDbBean
 @TableName(name = "tb_users")
 public class UserEntity {
-
-    public static final String EMAIL_INDEX = "email-index";
 
     private UUID userId;
 

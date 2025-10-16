@@ -24,7 +24,6 @@ public class CreateUserUseCase implements CreateUserPortIn {
 
     @Override
     public UserDomain execute(UserDomain user) {
-        logger.info("Creating user {}", user.getNickname());
 
         var userByEmail = userRepositoryPortOut.findByEmail(user.getEmail());
 
@@ -34,10 +33,6 @@ public class CreateUserUseCase implements CreateUserPortIn {
 
         user.encodePassword(bCryptPasswordEncoder);
 
-        var userCreated =  userRepositoryPortOut.save(user);
-
-        logger.info("User created {}", userCreated.getUserId());
-
-        return userCreated;
+        return userRepositoryPortOut.save(user);
     }
 }

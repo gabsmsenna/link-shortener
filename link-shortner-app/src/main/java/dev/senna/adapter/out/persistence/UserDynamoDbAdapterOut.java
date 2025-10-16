@@ -1,5 +1,6 @@
 package dev.senna.adapter.out.persistence;
 
+import dev.senna.adapter.out.persistence.entities.UserEntity;
 import dev.senna.core.domain.UserDomain;
 import dev.senna.core.port.out.UserRepositoryPortOut;
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
@@ -8,11 +9,10 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import static dev.senna.config.Constants.EMAIL_INDEX;
 
 import java.util.Optional;
 import java.util.UUID;
-
-import static dev.senna.adapter.out.persistence.UserEntity.EMAIL_INDEX;
 
 @Component
 public class UserDynamoDbAdapterOut implements UserRepositoryPortOut {

@@ -25,10 +25,14 @@ public class UserDomain {
 
     private LocalDateTime updatedAt;
 
+    public UserDomain(UUID userId) {
+        this.userId = userId;
+    }
+
     public UserDomain(String email, String password, String nickname) {
         this.userId = UUID.randomUUID();
         this.email = email;
-        this.password = password; // TODO - encode the password
+        this.password = password;
         this.nickname = nickname;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
