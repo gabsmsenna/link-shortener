@@ -19,7 +19,7 @@ public record ShortenLinkRequest(
         return new Link(
                 uniqueLinkSlug,
                 originalUrl,
-                utmTags.toDomain(),
+                utmTags != null ? utmTags.toDomain() : null,
                 new UserDomain(userId),
                 true,
                 expirationDateTime,

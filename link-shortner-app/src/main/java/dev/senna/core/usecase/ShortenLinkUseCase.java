@@ -27,7 +27,7 @@ public class ShortenLinkUseCase implements ShortenLinkPortIn {
 
         linkRepositoryPortOut.save(link);
 
-        return new ShortenLinkResponse("htp://localhost:3000/" + link.getLinkId());
+        return new ShortenLinkResponse("http://localhost:3000/" + link.getLinkId());
     }
 
 

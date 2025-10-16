@@ -1,6 +1,11 @@
 package dev.senna.core.domain;
 
+import org.springframework.web.util.UriComponentsBuilder;
+import software.amazon.awssdk.utils.StringUtils;
+
 import java.time.LocalDateTime;
+
+import static dev.senna.config.Constants.*;
 
 public class Link {
 
@@ -57,5 +62,28 @@ public class Link {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String generateFullUrl() {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(originalUrl);
+
+        if (StringUtils.isNotBlank(utmTags.getUtmCampaign())) {
+            builder.queryParam(UTM_CAMPAIGN, utmTags.getUtmCampaign());
+        }
+
+        if (StringUtils.isNotBlank(utmTags.getUtmContent())) {
+            builder.queryParam(UTM_CONTENT, utmTags.getUtmContent());
+        }
+
+        if (StringUtils.isNotBlank(utmTags.getUtmMedium())) {
+            builder.queryParam(UTM_MEDIUM, utmTags.getUtmMedium());
+        }
+
+        if (StringUtils.isNotBlank(utmTags.getUtmSource())) {
+            builder.queryParam(UTM_SOURCE, utmTags.getUtmSource());
+        }
+
+        return builder.toUriString();
     }
 }
