@@ -2,6 +2,8 @@ package dev.senna.adapter.out.persistence.entities;
 
 import dev.senna.config.TableName;
 import dev.senna.core.domain.Link;
+import dev.senna.core.domain.UserDomain;
+import dev.senna.core.domain.UtmTags;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.time.LocalDateTime;
@@ -154,5 +156,18 @@ public class LinkEntity {
         entity.setUpdatedAt(link.getUpdatedAt());
 
         return entity;
+    }
+
+    public Link toDomain(LinkEntity entity) {
+        return new Link(
+                entity.getLinkId(),
+                entity.originalUrl,
+                new UtmTags(entity.utmSource, entity.utmMedium, entity.utmCampaign, entity.utmContent),
+                new UserDomain(entity.userId),
+                entity.isActive(),
+                entity.getExpirationDateTime(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
 }
