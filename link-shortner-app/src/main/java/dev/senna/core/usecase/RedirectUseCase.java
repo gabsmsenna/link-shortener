@@ -1,10 +1,13 @@
 package dev.senna.core.usecase;
 
+import dev.senna.core.exception.LinkExpiredException;
 import dev.senna.core.exception.LinkNotFoundException;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.out.AnalyticsRepositoryPortOut;
 import dev.senna.core.port.out.LinkRepositoryPortOut;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class RedirectUseCase implements RedirectPortIn {
@@ -22,6 +25,14 @@ public class RedirectUseCase implements RedirectPortIn {
 
         var link = linkRepositoryPortOut.findByLinkId(linkId)
                 .orElseThrow(LinkNotFoundException::new);
+
+        if (!link.isActive()) {
+            throw new LinkExpiredException();
+        }
+
+        if (link.getExpirationDateTime().isBefore(LocalDateTime.now()) ) {
+            throw new LinkExpiredException();
+        }
 
         analyticsRepositoryPortOut.updateClickCount(link);
 
