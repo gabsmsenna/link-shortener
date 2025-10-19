@@ -14,7 +14,7 @@ import java.util.UUID;
 
 
 @RestController()
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserControllerAdapterIn {
 
     private final CreateUserPortIn createUserPortIn;

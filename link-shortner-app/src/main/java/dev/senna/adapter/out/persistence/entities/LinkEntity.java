@@ -160,7 +160,7 @@ public class LinkEntity {
         return entity;
     }
 
-    public Link toDomain(LinkEntity entity) {
+    public static Link toDomain(LinkEntity entity) {
         return new Link(
                 entity.getLinkId(),
                 entity.originalUrl,

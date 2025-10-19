@@ -2,11 +2,11 @@ package dev.senna.adapter.in.web;
 
 import dev.senna.adapter.in.web.dto.request.ShortenLinkRequest;
 import dev.senna.adapter.in.web.dto.response.ShortenLinkResponse;
+import dev.senna.core.domain.Link;
+import dev.senna.core.port.in.MyLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,22 +15,27 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @Validated
+@RequestMapping("/api/links")
 public class LinkControllerAdapterIn {
 
     private final ShortenLinkPortIn shortenLinkPortIn;
 
     private final RedirectPortIn redirectPortIn;
 
-    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn) {
+    private final MyLinksPortIn myLinksPortIn;
+
+    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, MyLinksPortIn myLinksPortIn) {
         this.shortenLinkPortIn = shortenLinkPortIn;
         this.redirectPortIn = redirectPortIn;
+        this.myLinksPortIn = myLinksPortIn;
     }
 
-    @PostMapping(value = "/links")
+    @PostMapping()
     public ResponseEntity<ShortenLinkResponse> shortenLink(@RequestBody @Valid ShortenLinkRequest req,
                                                            JwtAuthenticationToken token) {
 
@@ -56,5 +61,15 @@ public class LinkControllerAdapterIn {
         headers.setLocation(URI.create(fullUrl));
 
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Link>> userLinks(JwtAuthenticationToken token) {
+
+        var userId = UUID.fromString(token.getToken().getSubject());
+
+        var links = myLinksPortIn.execute(userId.toString());
+
+        return ResponseEntity.ok().body(links);
     }
 }

@@ -1,5 +1,6 @@
 package dev.senna.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.web.util.UriComponentsBuilder;
 import software.amazon.awssdk.utils.StringUtils;
 
@@ -17,8 +18,11 @@ public class Link {
     private UserDomain user;
     private boolean active;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
     private LocalDateTime expirationDateTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
     private LocalDateTime createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
     private LocalDateTime updatedAt;
 
     public Link(String linkId, String originalUrl, UtmTags utmTags, UserDomain user, boolean active, LocalDateTime expirationDateTime, LocalDateTime createdAt, LocalDateTime updatedAt) {
