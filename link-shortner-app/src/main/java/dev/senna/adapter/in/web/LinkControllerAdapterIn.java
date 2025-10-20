@@ -1,8 +1,9 @@
 package dev.senna.adapter.in.web;
 
 import dev.senna.adapter.in.web.dto.request.ShortenLinkRequest;
+import dev.senna.adapter.in.web.dto.response.ApiResponse;
+import dev.senna.adapter.in.web.dto.response.LinkResponse;
 import dev.senna.adapter.in.web.dto.response.ShortenLinkResponse;
-import dev.senna.core.domain.Link;
 import dev.senna.core.port.in.MyLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
@@ -15,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -64,12 +64,19 @@ public class LinkControllerAdapterIn {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Link>> userLinks(JwtAuthenticationToken token) {
+    public ResponseEntity<ApiResponse<LinkResponse>> userLinks(@RequestParam(name = "nextToken", defaultValue = "") String nextToken,
+                                                               @RequestParam(name = "limit", defaultValue = "3") Integer limit,
+                                                               JwtAuthenticationToken token) {
 
-        var userId = UUID.fromString(token.getToken().getSubject());
+        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
 
-        var links = myLinksPortIn.execute(userId.toString());
+        var links = myLinksPortIn.execute(userId, nextToken, limit);
 
-        return ResponseEntity.ok().body(links);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        links.items().stream().map(LinkResponse::fromDomain).toList(),
+                        links.nextToken()
+                )
+        );
     }
 }

@@ -1,8 +1,7 @@
 package dev.senna.core.port.out;
 
 import dev.senna.core.domain.Link;
-
-import java.util.List;
+import dev.senna.core.domain.PaginatedResult;
 import java.util.Optional;
 
 public interface LinkRepositoryPortOut {
@@ -11,5 +10,5 @@ public interface LinkRepositoryPortOut {
 
     Optional<Link> findByLinkId(String linkId);
 
-    List<Link> finAllByUserId(String userId);
+    PaginatedResult<Link> finAllByUserId(String userId, String nextToken, int limit);
 }

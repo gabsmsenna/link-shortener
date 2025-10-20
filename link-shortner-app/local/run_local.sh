@@ -28,7 +28,6 @@ sam local start-api \
   --warm-containers EAGER
 
 # UNCOMMENT BELOW FOR DEBUG MODE
-
 #echo "Running in DEBUG MODE..."
 #sam local start-api \
 #  --port 3000 \
