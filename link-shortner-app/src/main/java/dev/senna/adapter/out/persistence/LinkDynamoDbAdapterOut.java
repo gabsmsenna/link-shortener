@@ -3,20 +3,24 @@ package dev.senna.adapter.out.persistence;
 import dev.senna.adapter.out.persistence.entities.LinkEntity;
 import dev.senna.adapter.out.persistence.helper.DynamoTokenHelper;
 import dev.senna.core.domain.Link;
+import dev.senna.core.domain.LinkFilter;
 import dev.senna.core.domain.PaginatedResult;
 import dev.senna.core.port.out.LinkRepositoryPortOut;
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 import static dev.senna.config.Constants.FK_TB_USERS_LINK_USER_INDEX;
+import static java.util.Objects.isNull;
 
 @Component
 public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
@@ -53,23 +57,51 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
     }
 
     @Override
-    public PaginatedResult<Link> finAllByUserId(String userId, String nextToken, int limit ) {
+    public PaginatedResult<Link> findAllByUserId(String userId,
+                                                 String nextToken,
+                                                 int limit,
+                                                 LinkFilter filters) {
 
         QueryConditional queryConditional = QueryConditional.keyEqualTo(Key.builder()
                 .partitionValue(userId)
                 .build());
 
-        QueryEnhancedRequest.Builder queryEnhancedRequest = QueryEnhancedRequest.builder()
+
+
+        List<String> conditions = new ArrayList<>();
+        Map<String, AttributeValue> expressionValues = new HashMap<>();
+
+        if (!isNull(filters.active())) {
+            conditions.add("active = :activeValue");
+            expressionValues.put(":activeValue", AttributeValue.fromBool(filters.active()));
+        }
+
+        if (!isNull(filters.startCreatedAt()) && !isNull(filters.endCreatedAt())) {
+            conditions.add("created_at BETWEEN :startCreatedAt AND :endCreatedAt");
+            expressionValues.put(":startCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.startCreatedAt(), LocalTime.MIN).toString()));
+            expressionValues.put(":endCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.endCreatedAt(), LocalTime.MAX).toString()));
+        }
+
+        QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
                 .limit(limit);
 
+        if (!conditions.isEmpty()) {
+            requestBuilder.filterExpression(
+                    Expression.builder()
+                            .expression(String.join(" AND ", conditions))
+                            .expressionValues(expressionValues)
+                            .build()
+            );
+        }
+
         if (nextToken != null && !nextToken.isEmpty()) {
             var map = dynamoTokenHelper.decodeStartToken(nextToken);
-            queryEnhancedRequest.exclusiveStartKey(map);
+            requestBuilder.exclusiveStartKey(map);
         }
 
         var page =  dynamoDbTemplate
-                .query(queryEnhancedRequest.build(), LinkEntity.class, FK_TB_USERS_LINK_USER_INDEX)
+                .query(requestBuilder.build(), LinkEntity.class, FK_TB_USERS_LINK_USER_INDEX)
                 .stream()
                 .findFirst()
                 .orElse(null);

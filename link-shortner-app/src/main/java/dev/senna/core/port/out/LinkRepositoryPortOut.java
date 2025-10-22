@@ -1,7 +1,10 @@
 package dev.senna.core.port.out;
 
 import dev.senna.core.domain.Link;
+import dev.senna.core.domain.LinkFilter;
 import dev.senna.core.domain.PaginatedResult;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface LinkRepositoryPortOut {
@@ -10,5 +13,5 @@ public interface LinkRepositoryPortOut {
 
     Optional<Link> findByLinkId(String linkId);
 
-    PaginatedResult<Link> finAllByUserId(String userId, String nextToken, int limit);
+    PaginatedResult<Link> findAllByUserId(String userId, String nextToken, int limit, LinkFilter filters);
 }

@@ -4,6 +4,7 @@ import dev.senna.adapter.in.web.dto.request.ShortenLinkRequest;
 import dev.senna.adapter.in.web.dto.response.ApiResponse;
 import dev.senna.adapter.in.web.dto.response.LinkResponse;
 import dev.senna.adapter.in.web.dto.response.ShortenLinkResponse;
+import dev.senna.core.domain.LinkFilter;
 import dev.senna.core.port.in.MyLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -66,11 +68,14 @@ public class LinkControllerAdapterIn {
     @GetMapping()
     public ResponseEntity<ApiResponse<LinkResponse>> userLinks(@RequestParam(name = "nextToken", defaultValue = "") String nextToken,
                                                                @RequestParam(name = "limit", defaultValue = "3") Integer limit,
+                                                               @RequestParam(name = "active", required = false) Boolean active,
+                                                               @RequestParam(name = "startCreatedAt", required = false) LocalDate startCreatedAt,
+                                                               @RequestParam(name = "endCreatedAt", required = false) LocalDate endCreatedAt,
                                                                JwtAuthenticationToken token) {
 
         var userId = String.valueOf(token.getTokenAttributes().get("sub"));
 
-        var links = myLinksPortIn.execute(userId, nextToken, limit);
+        var links = myLinksPortIn.execute(userId, nextToken, limit, new LinkFilter(active, startCreatedAt, endCreatedAt));
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
