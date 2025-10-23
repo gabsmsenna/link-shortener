@@ -5,6 +5,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import software.amazon.awssdk.utils.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static dev.senna.config.Constants.*;
 
@@ -89,5 +90,9 @@ public class Link {
         }
 
         return builder.toUriString();
+    }
+
+    public boolean isUserOwner(UUID userId) {
+        return this.user.getUserId().equals(userId);
     }
 }

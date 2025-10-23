@@ -1,10 +1,12 @@
 package dev.senna.adapter.in.web;
 
 import dev.senna.adapter.in.web.dto.request.ShortenLinkRequest;
+import dev.senna.adapter.in.web.dto.response.AnalyticsResponse;
 import dev.senna.adapter.in.web.dto.response.ApiResponse;
 import dev.senna.adapter.in.web.dto.response.LinkResponse;
 import dev.senna.adapter.in.web.dto.response.ShortenLinkResponse;
 import dev.senna.core.domain.LinkFilter;
+import dev.senna.core.port.in.LinkAnalyticsPortIn;
 import dev.senna.core.port.in.MyLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
@@ -31,10 +33,13 @@ public class LinkControllerAdapterIn {
 
     private final MyLinksPortIn myLinksPortIn;
 
-    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, MyLinksPortIn myLinksPortIn) {
+    private final LinkAnalyticsPortIn linkAnalyticsPortIn;
+
+    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, MyLinksPortIn myLinksPortIn, LinkAnalyticsPortIn linkAnalyticsPortIn) {
         this.shortenLinkPortIn = shortenLinkPortIn;
         this.redirectPortIn = redirectPortIn;
         this.myLinksPortIn = myLinksPortIn;
+        this.linkAnalyticsPortIn = linkAnalyticsPortIn;
     }
 
     @PostMapping()
@@ -83,5 +88,18 @@ public class LinkControllerAdapterIn {
                         links.nextToken()
                 )
         );
+    }
+
+    @GetMapping("/{linkId}/analytics")
+    public ResponseEntity<AnalyticsResponse> linkAnalytics(@PathVariable(name = "linkId") String linkId,
+                                                           @RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                                           @RequestParam(name = "endDate", required = false) LocalDate endDate,
+                                                           JwtAuthenticationToken token) {
+
+        var userId = String.valueOf(token.getTokenAttributes().get("sub"));
+
+        var body = linkAnalyticsPortIn.execute(userId, linkId, startDate, endDate);
+
+        return ResponseEntity.ok(body);
     }
 }

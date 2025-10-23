@@ -2,6 +2,7 @@ package dev.senna.adapter.out.persistence.entities;
 
 import dev.senna.config.TableName;
 import dev.senna.core.domain.Link;
+import dev.senna.core.domain.LinkAnalytics;
 import dev.senna.core.domain.UserDomain;
 import dev.senna.core.domain.UtmTags;
 import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbAtomicCounter;
@@ -11,6 +12,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static dev.senna.config.Constants.FK_TB_USERS_LINK_USER_INDEX;
@@ -76,5 +78,14 @@ public class LinkAnalyticsEntity {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LinkAnalytics toDomain() {
+        return new LinkAnalytics(
+                linkId,
+                date,
+                Long.valueOf(clicks),
+                LocalDateTime.ofInstant(updatedAt, ZoneId.systemDefault())
+        );
     }
 }
