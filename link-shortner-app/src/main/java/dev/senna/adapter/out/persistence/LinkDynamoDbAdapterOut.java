@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.LINK_ACTIVE;
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.LINK_CREATED_AT;
 import static dev.senna.config.Constants.FK_TB_USERS_LINK_USER_INDEX;
 import static java.util.Objects.isNull;
 
@@ -82,12 +84,12 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
 
     private static void buildFiltersParam(LinkFilter filters, List<String> conditions, Map<String, AttributeValue> expressionValues) {
         if (!isNull(filters.active())) {
-            conditions.add("active = :activeValue");
+            conditions.add(LINK_ACTIVE + " = :activeValue");
             expressionValues.put(":activeValue", AttributeValue.fromBool(filters.active()));
         }
 
         if (!isNull(filters.startCreatedAt()) && !isNull(filters.endCreatedAt())) {
-            conditions.add("created_at BETWEEN :startCreatedAt AND :endCreatedAt");
+            conditions.add(LINK_CREATED_AT + " BETWEEN :startCreatedAt AND :endCreatedAt");
             expressionValues.put(":startCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.startCreatedAt(), LocalTime.MIN).toString()));
             expressionValues.put(":endCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.endCreatedAt(), LocalTime.MAX).toString()));
         }

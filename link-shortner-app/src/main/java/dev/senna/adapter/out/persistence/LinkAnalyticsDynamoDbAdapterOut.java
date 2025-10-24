@@ -1,7 +1,6 @@
 package dev.senna.adapter.out.persistence;
 
 import dev.senna.adapter.out.persistence.entities.LinkAnalyticsEntity;
-import dev.senna.adapter.out.persistence.entities.LinkEntity;
 import dev.senna.core.domain.Link;
 import dev.senna.core.domain.LinkAnalytics;
 import dev.senna.core.port.out.AnalyticsRepositoryPortOut;
@@ -18,6 +17,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.*;
 
 @Component
 public class LinkAnalyticsDynamoDbAdapterOut implements AnalyticsRepositoryPortOut {
@@ -79,8 +80,8 @@ public class LinkAnalyticsDynamoDbAdapterOut implements AnalyticsRepositoryPortO
                                  LocalDate date) {
 
         Map<String, AttributeValue> key = Map.of(
-                "link_id", AttributeValue.fromS(entity.getLinkId()),
-                "date", AttributeValue.fromS(date.toString())
+                LINK_ANALYTICS_ID, AttributeValue.fromS(entity.getLinkId()),
+                LINK_ANALYTICS_DATE, AttributeValue.fromS(date.toString())
         );
 
         Map<String, AttributeValue> expressionValues = Map.of(
@@ -92,7 +93,9 @@ public class LinkAnalyticsDynamoDbAdapterOut implements AnalyticsRepositoryPortO
         UpdateItemRequest request = UpdateItemRequest.builder()
                 .tableName("tb_links_analytics")
                 .key(key)
-                .updateExpression("SET clicks = if_not_exists(clicks, :zero) + :inc, updated_at = :now")
+                .updateExpression(String.format("SET %s = if_not_exists(%s, :zero) + :inc, updated_at = :now",
+                        LINK_ANALYTICS_CLICKS,
+                        LINK_ANALYTICS_CLICKS))
                 .expressionAttributeValues(expressionValues)
                 .build();
 

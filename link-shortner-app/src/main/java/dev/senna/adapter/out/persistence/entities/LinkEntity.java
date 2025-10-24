@@ -9,6 +9,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.*;
 import static dev.senna.config.Constants.FK_TB_USERS_LINK_USER_INDEX;
 
 @DynamoDbBean
@@ -35,7 +36,7 @@ public class LinkEntity {
 
 
 
-    @DynamoDbAttribute("link_id")
+    @DynamoDbAttribute(LINK_ID)
     @DynamoDbPartitionKey
     @DynamoDbSecondarySortKey(indexNames = FK_TB_USERS_LINK_USER_INDEX)
     public String getLinkId() {
@@ -46,7 +47,7 @@ public class LinkEntity {
         this.linkId = linkId;
     }
 
-    @DynamoDbAttribute("original_url")
+    @DynamoDbAttribute(LINK_ORIGINAL_URL)
     public String getOriginalUrl() {
         return originalUrl;
     }
@@ -55,7 +56,7 @@ public class LinkEntity {
         this.originalUrl = originalUrl;
     }
 
-    @DynamoDbAttribute("utm_source")
+    @DynamoDbAttribute(LINK_UTM_SOURCE)
     public String getUtmSource() {
         return utmSource;
     }
@@ -64,7 +65,7 @@ public class LinkEntity {
         this.utmSource = utmSource;
     }
 
-    @DynamoDbAttribute("utm_medium")
+    @DynamoDbAttribute(LINK_UTM_MEDIUM)
     public String getUtmMedium() {
         return utmMedium;
     }
@@ -73,7 +74,7 @@ public class LinkEntity {
         this.utmMedium = utmMedium;
     }
 
-    @DynamoDbAttribute("utm_campaign")
+    @DynamoDbAttribute(LINK_UTM_CAMPAIGN)
     public String getUtmCampaign() {
         return utmCampaign;
     }
@@ -82,7 +83,7 @@ public class LinkEntity {
         this.utmCampaign = utmCampaign;
     }
 
-    @DynamoDbAttribute("utm_content")
+    @DynamoDbAttribute(LINK_UTM_CONTENT)
     public String getUtmContent() {
         return utmContent;
     }
@@ -91,7 +92,7 @@ public class LinkEntity {
         this.utmContent = utmContent;
     }
 
-    @DynamoDbAttribute("user_id")
+    @DynamoDbAttribute(LINK_USER_ID)
     @DynamoDbSecondaryPartitionKey(indexNames = FK_TB_USERS_LINK_USER_INDEX)
     public UUID getUserId() {
         return userId;
@@ -101,7 +102,7 @@ public class LinkEntity {
         this.userId = userId;
     }
 
-    @DynamoDbAttribute("active")
+    @DynamoDbAttribute(LINK_ACTIVE)
     public boolean isActive() {
         return active;
     }
@@ -110,7 +111,7 @@ public class LinkEntity {
         this.active = active;
     }
 
-    @DynamoDbAttribute("expiration_date_time")
+    @DynamoDbAttribute(LINK_EXPIRATION_DATE_TIME)
     public LocalDateTime getExpirationDateTime() {
         return expirationDateTime;
     }
@@ -119,7 +120,7 @@ public class LinkEntity {
         this.expirationDateTime = expirationDateTime;
     }
 
-    @DynamoDbAttribute("created_at")
+    @DynamoDbAttribute(LINK_CREATED_AT)
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -128,7 +129,7 @@ public class LinkEntity {
         this.createdAt = createdAt;
     }
 
-    @DynamoDbAttribute("updated_at")
+    @DynamoDbAttribute(LINK_UPDATED_AT)
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
