@@ -25,6 +25,8 @@ public class CreateUserUseCase implements CreateUserPortIn {
     @Override
     public UserDomain execute(UserDomain user) {
 
+        logger.info("Creating user {}", user.getEmail());
+
         var userByEmail = userRepositoryPortOut.findByEmail(user.getEmail());
 
         if (userByEmail.isPresent()) {

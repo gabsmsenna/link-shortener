@@ -73,7 +73,7 @@ public class LinkControllerAdapterIn {
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
     }
 
-    @GetMapping()
+    @GetMapping(value = "/links")
     public ResponseEntity<ApiResponse<LinkResponse>> userLinks(@RequestParam(name = "nextToken", defaultValue = "") String nextToken,
                                                                @RequestParam(name = "limit", defaultValue = "3") Integer limit,
                                                                @RequestParam(name = "active", required = false) Boolean active,
