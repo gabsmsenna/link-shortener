@@ -4,7 +4,7 @@ import dev.senna.core.domain.Link;
 import dev.senna.core.domain.LinkFilter;
 import dev.senna.core.domain.PaginatedResult;
 
-public interface MyLinksPortIn {
+public interface UserLinksPortIn {
 
     PaginatedResult<Link> execute(
             String userId,

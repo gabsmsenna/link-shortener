@@ -10,11 +10,11 @@ import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -62,15 +62,25 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
                                                  int limit,
                                                  LinkFilter filters) {
 
-        QueryConditional queryConditional = QueryConditional.keyEqualTo(Key.builder()
-                .partitionValue(userId)
-                .build());
-
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(
+                Key.builder()
+                    .partitionValue(userId)
+                    .build());
 
 
         List<String> conditions = new ArrayList<>();
         Map<String, AttributeValue> expressionValues = new HashMap<>();
 
+        buildFiltersParam(filters, conditions, expressionValues);
+
+        var query = buildQueryEnhancedRequest(nextToken, limit, queryConditional, conditions, expressionValues);
+
+        var page = executeQuery(query);
+
+        return convertAndReturn(page);
+    }
+
+    private static void buildFiltersParam(LinkFilter filters, List<String> conditions, Map<String, AttributeValue> expressionValues) {
         if (!isNull(filters.active())) {
             conditions.add("active = :activeValue");
             expressionValues.put(":activeValue", AttributeValue.fromBool(filters.active()));
@@ -81,7 +91,9 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
             expressionValues.put(":startCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.startCreatedAt(), LocalTime.MIN).toString()));
             expressionValues.put(":endCreatedAt", AttributeValue.fromS(LocalDateTime.of(filters.endCreatedAt(), LocalTime.MAX).toString()));
         }
+    }
 
+    private QueryEnhancedRequest buildQueryEnhancedRequest(String nextToken, int limit, QueryConditional queryConditional, List<String> conditions, Map<String, AttributeValue> expressionValues) {
         QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
                 .limit(limit);
@@ -99,13 +111,18 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
             var map = dynamoTokenHelper.decodeStartToken(nextToken);
             requestBuilder.exclusiveStartKey(map);
         }
+        return requestBuilder.build();
+    }
 
-        var page =  dynamoDbTemplate
-                .query(requestBuilder.build(), LinkEntity.class, FK_TB_USERS_LINK_USER_INDEX)
+    private Page<LinkEntity> executeQuery(QueryEnhancedRequest query) {
+        return dynamoDbTemplate
+                .query(query, LinkEntity.class, FK_TB_USERS_LINK_USER_INDEX)
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
 
+    private PaginatedResult<Link> convertAndReturn(Page<LinkEntity> page) {
         if (page == null) {
             return new PaginatedResult<>(Collections.emptyList(), null, false);
         }
@@ -121,4 +138,8 @@ public class LinkDynamoDbAdapterOut implements LinkRepositoryPortOut {
                 page.lastEvaluatedKey() != null
         );
     }
+
+
+
+
 }

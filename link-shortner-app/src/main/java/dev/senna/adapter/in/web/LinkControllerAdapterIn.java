@@ -7,7 +7,7 @@ import dev.senna.adapter.in.web.dto.response.LinkResponse;
 import dev.senna.adapter.in.web.dto.response.ShortenLinkResponse;
 import dev.senna.core.domain.LinkFilter;
 import dev.senna.core.port.in.LinkAnalyticsPortIn;
-import dev.senna.core.port.in.MyLinksPortIn;
+import dev.senna.core.port.in.UserLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
 import jakarta.validation.Valid;
@@ -31,11 +31,11 @@ public class LinkControllerAdapterIn {
 
     private final RedirectPortIn redirectPortIn;
 
-    private final MyLinksPortIn myLinksPortIn;
+    private final UserLinksPortIn myLinksPortIn;
 
     private final LinkAnalyticsPortIn linkAnalyticsPortIn;
 
-    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, MyLinksPortIn myLinksPortIn, LinkAnalyticsPortIn linkAnalyticsPortIn) {
+    public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, UserLinksPortIn myLinksPortIn, LinkAnalyticsPortIn linkAnalyticsPortIn) {
         this.shortenLinkPortIn = shortenLinkPortIn;
         this.redirectPortIn = redirectPortIn;
         this.myLinksPortIn = myLinksPortIn;
