@@ -17,7 +17,7 @@ public class ShortenLinkUseCase implements ShortenLinkPortIn {
     }
 
     @Override
-    public ShortenLinkResponse execute(Link link) {
+    public String execute(Link link) {
 
         var linkOpt = linkRepositoryPortOut.findByLinkId(link.getLinkId());
 
@@ -27,7 +27,7 @@ public class ShortenLinkUseCase implements ShortenLinkPortIn {
 
         linkRepositoryPortOut.save(link);
 
-        return new ShortenLinkResponse("http://localhost:3000/" + link.getLinkId());
+        return link.getLinkId();
     }
 
 

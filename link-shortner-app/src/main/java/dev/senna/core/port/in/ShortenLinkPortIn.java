@@ -7,5 +7,5 @@ import dev.senna.core.usecase.ShortenLinkUseCase;
 
 public interface ShortenLinkPortIn {
 
-    ShortenLinkResponse execute(Link req);
+    String execute(Link req);
 }

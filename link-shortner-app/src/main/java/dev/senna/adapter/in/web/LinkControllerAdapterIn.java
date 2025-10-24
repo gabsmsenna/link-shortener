@@ -10,6 +10,7 @@ import dev.senna.core.port.in.LinkAnalyticsPortIn;
 import dev.senna.core.port.in.UserLinksPortIn;
 import dev.senna.core.port.in.RedirectPortIn;
 import dev.senna.core.port.in.ShortenLinkPortIn;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,6 @@ import java.util.UUID;
 
 @RestController
 @Validated
-@RequestMapping("/api/links")
 public class LinkControllerAdapterIn {
 
     private final ShortenLinkPortIn shortenLinkPortIn;
@@ -35,6 +35,7 @@ public class LinkControllerAdapterIn {
 
     private final LinkAnalyticsPortIn linkAnalyticsPortIn;
 
+
     public LinkControllerAdapterIn(ShortenLinkPortIn shortenLinkPortIn, RedirectPortIn redirectPortIn, UserLinksPortIn myLinksPortIn, LinkAnalyticsPortIn linkAnalyticsPortIn) {
         this.shortenLinkPortIn = shortenLinkPortIn;
         this.redirectPortIn = redirectPortIn;
@@ -42,16 +43,18 @@ public class LinkControllerAdapterIn {
         this.linkAnalyticsPortIn = linkAnalyticsPortIn;
     }
 
-    @PostMapping()
+    @PostMapping(value = "/links")
     public ResponseEntity<ShortenLinkResponse> shortenLink(@RequestBody @Valid ShortenLinkRequest req,
+                                                           HttpServletRequest request,
                                                            JwtAuthenticationToken token) {
 
         var userId = UUID.fromString(token.getToken().getSubject());
 
+        var linkId = shortenLinkPortIn.execute(req.toDomain(userId));
 
-        var resp = shortenLinkPortIn.execute(req.toDomain(userId));
+        var redirectUrl = request.getRequestURL().toString().replace("links", linkId);
 
-        return ResponseEntity.created(URI.create(resp.shortenUrl())).body(resp);
+        return ResponseEntity.created(URI.create(redirectUrl)).body(new ShortenLinkResponse(redirectUrl));
     }
 
     @GetMapping(value = "/{linkId}")

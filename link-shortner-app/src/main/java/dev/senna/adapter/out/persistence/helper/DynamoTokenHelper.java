@@ -8,6 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.LINK_ID;
+import static dev.senna.adapter.out.persistence.DynamoDbAttributeConstants.LINK_USER_ID;
+
 @Component
 public class DynamoTokenHelper {
 
@@ -20,7 +23,7 @@ public class DynamoTokenHelper {
 
     public String encodeStartToken(Map<String, AttributeValue> key) {
         try {
-            var dto = new TokenDto(key.get("link_id").s(), key.get("user_id").s());
+            var dto = new TokenDto(key.get(LINK_ID).s(), key.get(LINK_USER_ID).s());
 
             String json = objectMapper.writeValueAsString(dto);
 
@@ -39,8 +42,8 @@ public class DynamoTokenHelper {
             var dto = objectMapper.readValue(json, TokenDto.class);
 
             return Map.of(
-                    "user_id", AttributeValue.fromS(dto.userId()),
-                    "link_id", AttributeValue.fromS(dto.linkId())
+                    LINK_USER_ID, AttributeValue.fromS(dto.userId()),
+                    LINK_ID, AttributeValue.fromS(dto.linkId())
             );
         } catch (Exception e) {
             throw new RuntimeException("Error decoding start token", e);
