@@ -11,10 +11,10 @@ permissions:
 
 jobs:
   cicd:
-    uses: ./.github/workflows/terraform.yml
+    uses: ./.github/workflows/cicd.yml
     with:
       environment: dev
       aws-assume-role-arn: "arn:aws:iam::762233753798:role/GithubActions_LinkShortner_Role"
-      aws-region: "sa-east-1"
+      aws-region: "us-east-2"
       aws-statefile-s3-bucket: "terraform-762233753798-statefile "
-      aws-lock-dynamodb-table: "{{ nome da tabela do dynamodb }}"
+      aws-lock-dynamodb-table: "terraform-lock"
