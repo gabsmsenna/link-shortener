@@ -1,1 +1,10 @@
-bucket_name = "prod-bucket-link-shortener"
+env = "prod"
+region = "us-east-2"
+
+app_prefix = "link-shortener-saas"
+
+lambda_handler = "dev.senna.StreamLambdaHandler::handleRequest"
+
+env_vars = {
+  "VARIABLE": "TESTE"
+}
