@@ -18,3 +18,5 @@ jobs:
       aws-region: "us-east-2"
       aws-statefile-s3-bucket: "terraform-762233753798-statefile"
       aws-lock-dynamodb-table: "terraform-lock"
+      artifact-bucket: "code-762233753798-artifacts"
+      ssm-param-artifact-key: "/apps/link-shortener-saas"
