@@ -65,7 +65,7 @@ jobs:
 
       - name: Build & Test (Maven)
         if: ${{ inputs.environment == 'dev' }}
-        working-directory: app
+        working-directory: link-shortener-app
         run: |
           mvn -B -ntp clean verify
           JAR_PATH=$(ls target/*.zip | head -n1)
