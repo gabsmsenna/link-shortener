@@ -70,7 +70,7 @@ jobs:
           mvn -B -ntp clean verify
           JAR_PATH=$(ls target/*.zip | head -n1)
           echo "jar_path=$JAR_PATH" >> $GITHUB_OUTPUT
-          id: build
+        id: build
 
       - name: Upload JAR to S3 & store key in SSM (DEV)
         if: ${{ inputs.environment == 'dev' }}
