@@ -74,10 +74,10 @@ jobs:
 
       - name: Upload JAR to S3 & store key in SSM (DEV)
         if: ${{ inputs.environment == 'dev' }}
-        working-directory: app
+        working-directory: link-shortener-app
         id: publish
         run: |
-          KEY="${{ github.event.repository.name }}/artifacts/${GITHUB_SHA}/app.zip"
+          KEY="${{ github.event.repository.name }}/artifacts/${GITHUB_SHA}/link-shortener-app.zip"
           
           aws s3 cp "${{ steps.build.outputs.jar_path }}" "s3://${{ inputs.artifact-bucket }}/${KEY}"
           
