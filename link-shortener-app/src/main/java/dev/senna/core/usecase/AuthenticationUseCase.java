@@ -2,7 +2,7 @@ package dev.senna.core.usecase;
 
 import dev.senna.adapter.in.web.dto.request.LoginRequest;
 import dev.senna.adapter.in.web.dto.response.LoginResponse;
-import dev.senna.config.JwtConfig;
+import dev.senna.config.AwsJwtSecretConfig;
 import dev.senna.core.exception.LoginException;
 import dev.senna.core.port.in.AuthenticatePortIn;
 import dev.senna.core.port.out.UserRepositoryPortOut;
@@ -23,9 +23,9 @@ public class AuthenticationUseCase implements AuthenticatePortIn {
     private final UserRepositoryPortOut userRepository;
     private final JwtEncoder jwtEncoder;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtConfig jwtConfig;
+    private final AwsJwtSecretConfig jwtConfig;
 
-    public AuthenticationUseCase(UserRepositoryPortOut userRepository, JwtEncoder jwtEncoder, BCryptPasswordEncoder bCryptPasswordEncoder, JwtConfig jwtConfig) {
+    public AuthenticationUseCase(UserRepositoryPortOut userRepository, JwtEncoder jwtEncoder, BCryptPasswordEncoder bCryptPasswordEncoder, AwsJwtSecretConfig jwtConfig) {
         this.userRepository = userRepository;
         this.jwtEncoder = jwtEncoder;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -43,11 +43,11 @@ public class AuthenticationUseCase implements AuthenticatePortIn {
             throw new LoginException();
         }
 
-        var expiresIn = jwtConfig.getExpiresIn();
+        var expiresIn = jwtConfig.jwtExpiresIn();
 
         var claims = JwtClaimsSet.builder()
                 .subject(userOpt.getUserId().toString())
-                .issuer(jwtConfig.getIssuer())
+                .issuer(jwtConfig.jwtIssuer())
                 .expiresAt(Instant.now().plusSeconds(expiresIn))
                 .claim(JWT_EMAIL_CLAIM, userOpt.getEmail())
                 .build();
