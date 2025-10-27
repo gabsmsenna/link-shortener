@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+link-shortener-app/src/main/resources/app.pub
+link-shortener-app/src/main/resources/app.key
