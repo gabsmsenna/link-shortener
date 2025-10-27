@@ -16,6 +16,7 @@ import java.io.OutputStream;
 public class StreamLambdaHandler implements RequestStreamHandler {
     private static SpringBootLambdaContainerHandler<HttpApiV2ProxyRequest, AwsProxyResponse> handler;
     static {
+
         try {
             handler = SpringBootLambdaContainerHandler.getHttpApiV2ProxyHandler(Application.class);
         } catch (ContainerInitializationException e) {
@@ -23,6 +24,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
             e.printStackTrace();
             throw new RuntimeException("Could not initialize Spring Boot application", e);
         }
+
     }
 
     @Override
