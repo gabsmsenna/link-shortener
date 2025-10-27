@@ -6,5 +6,5 @@ app_prefix = "link-shortener-saas"
 lambda_handler = "dev.senna.StreamLambdaHandler::handleRequest"
 
 env_vars = {
-  "VARIABLE": "TESTE"
+  "SECRET_NAME" = "dev-link-shortener-saas-jwt-secrets"
 }

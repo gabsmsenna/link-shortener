@@ -25,10 +25,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtConfig jwtConfig;
+    private final AwsJwtSecretConfig awsJwtSecretConfig;
 
-    public SecurityConfig(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
+    public SecurityConfig(AwsJwtSecretConfig awsJwtSecretConfig) {
+        this.awsJwtSecretConfig = awsJwtSecretConfig;
     }
 
     @Bean
@@ -53,13 +53,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(jwtConfig.getPublicKey()).build();
+    public JwtDecoder jwtDecoder() throws Exception {
+        return NimbusJwtDecoder.withPublicKey(awsJwtSecretConfig.jwtPublicKey()).build();
     }
 
     @Bean
-    public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(jwtConfig.getPublicKey()).privateKey(jwtConfig.getPrivateKey()).build();
+    public JwtEncoder jwtEncoder() throws Exception {
+        JWK jwk = new RSAKey.Builder(awsJwtSecretConfig.jwtPublicKey()).privateKey(awsJwtSecretConfig.jwtPrivateKey()).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
