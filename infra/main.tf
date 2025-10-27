@@ -5,7 +5,9 @@ locals {
 module "iam_lambda" {
   source       = "./modules/iam_lambda"
   name_prefix  = local.name_prefix
-  dynamodb_arn = module.dynamodb.table_arn
+  dynamodb_arn = [
+    module.dynamodb_tb_users.table_arn
+  ]
   secret_arn   = module.secret_jwt.secret_arn
 }
 
@@ -24,7 +26,7 @@ module "lambda" {
 
 module "secret_jwt" {
   source = "./modules/secrets_manager"
-  secret_name = "${local.name_prefix}-jwt-secrets"
+  secret_name = "${local.name_prefix}-jwt-secret"
   description = "Secret Manager that stores private and public jwt keys"
 }
 
@@ -36,15 +38,80 @@ module "api" {
   timeout_ms        = 29000
 }
 
-module "dynamodb" {
-  source       = "./modules/dynamodb"
-  table_name   = "${local.name_prefix}-links"
-  billing_mode = var.billing_mode
-  hash_key     = "id"
+module "dynamodb_tb_users" {
+  source = "./modules/dynamodb"
+
+  table_name   = "${var.env}_tb_users"
+  hash_key     = "user_id"
 
   attributes = [
     {
-      name = "id",
+      name = "user_id"
+      type = "S"
+    },
+    {
+      name = "email"
+      type = "S"
+    }
+  ]
+
+  global_secondary_indexes = [
+    {
+      name               = "email-index"
+      hash_key           = "email"
+      range_key          = null
+      projection_type    = "INCLUDE"
+      non_key_attributes = ["user_id", "password"]
+      read_capacity      = 1
+      write_capacity     = 1
+    }
+  ]
+}
+
+module "dynamodb_user_links" {
+  source = "./modules/dynamodb"
+
+  table_name   = "${var.env}_tb_user_links"
+  hash_key     = "link_id"
+
+  attributes = [
+    {
+      name = "link_id"
+      type = "S"
+    },
+    {
+      name = "user_id"
+      type = "S"
+    }
+  ]
+
+  global_secondary_indexes = [
+    {
+      name               = "fk-user-index"
+      hash_key           = "user_id"
+      range_key          = "link_id"
+      projection_type    = "ALL"
+      non_key_attributes = []   # not used for "ALL"
+      read_capacity      = 1
+      write_capacity     = 1
+    }
+  ]
+}
+
+module "dynamodb_links_analytics" {
+  source = "./modules/dynamodb"
+
+  table_name   = "${var.env}_tb_links_analytics"
+  hash_key     = "link_id"
+  range_key    = "date"
+
+  attributes = [
+    {
+      name = "link_id"
+      type = "S"
+    },
+    {
+      name = "date"
       type = "S"
     }
   ]
