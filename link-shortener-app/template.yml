@@ -4,7 +4,17 @@ Description: AWS Serverless Spring Boot 2 API - my.service::my-service
 Globals:
   Api:
     EndpointConfiguration: REGIONAL
-
+  Function:
+    Environment:
+      Variables:
+        SECRET_NAME: link-shortener-saas-jwt-secret
+        AWS_ACCESS_KEY_ID: fake
+        AWS_SECRET_ACCESS_KEY: fake
+        AWS_REGION: sa-east-1
+        AWS_DEFAULT_REGION: sa-east-1
+        SPRING_CLOUD_AWS_ENDPOINT: http://localstack-main:4566
+        SPRING_CLOUD_AWS_SECRETSMANAGER_ENDPOINT: http://localstack-main:4566
+        SPRING_PROFILES_ACTIVE: local
 Resources:
   MyServiceFunction:
     Type: AWS::Serverless::Function
