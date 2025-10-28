@@ -26,7 +26,7 @@ module "lambda" {
 
 module "secret_jwt" {
   source = "./modules/secrets_manager"
-  secret_name = "${local.name_prefix}-jwt-secret"
+  secret_name = "${local.name_prefix}-jwt-secrets"
   description = "Secret Manager that stores private and public jwt keys"
 }
 
