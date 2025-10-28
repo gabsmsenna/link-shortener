@@ -23,7 +23,7 @@ resource "aws_iam_policy" "lambda" {
       {
         Action   = ["dynamodb:*"],
         Effect   = "Allow",
-        Resource = concat(var.dynamodb_arn, [for arn in var.dynamodb_arn : "${arn}/index/*"])
+        Resource = concat(var.dynamodb_arn, [ for arn in var.dynamodb_arn : "${arn}/index/*"] )
       },
       {
         Action   = ["secretsmanager:GetSecretValue"],
