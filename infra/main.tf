@@ -1,6 +1,5 @@
 locals {
   name_prefix = "${var.env}-${var.app_prefix}"
-  secret_jwt_name = "${var.env}-link-shortener-jwt-secrets"
 }
 
 module "iam_lambda" {
@@ -29,7 +28,7 @@ module "lambda" {
 
 module "secret_jwt" {
   source = "./modules/secrets_manager"
-  secret_name = local.secret_jwt_name
+  secret_name = "${local.name_prefix}-jwt-secret"
   description = "Secret Manager that stores private and public jwt keys"
 }
 
