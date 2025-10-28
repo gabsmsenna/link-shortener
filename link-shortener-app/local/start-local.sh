@@ -90,6 +90,6 @@ aws --endpoint-url="http://localhost:4566" dynamodb create-table \
   ## Create Secrets Manager
   aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
     --region "sa-east-1" \
-    --name link-shortener-saas-jwt-secret \
+    --name link-shortener-jwt-secrets \
     --description "Secret Manager that stores private and public jwt keys" \
     --secret-string file://secret.json
