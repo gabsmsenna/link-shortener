@@ -14,4 +14,6 @@ public interface UserRepositoryPortOut {
     void deleteById(UUID userId);
 
     Optional<UserDomain> findById(UUID userId);
+
+    Long count();
 }

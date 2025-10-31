@@ -8,6 +8,7 @@ Globals:
     Environment:
       Variables:
         ENV: local
+        FEATURE_FLAG_CREATE_USERS: false
         SECRET_NAME: link-shortener-saas-jwt-secret
         AWS_ACCESS_KEY_ID: fake
         AWS_SECRET_ACCESS_KEY: fake

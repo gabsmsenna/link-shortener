@@ -96,4 +96,16 @@ public class UserDynamoDbAdapterOut implements UserRepositoryPortOut {
 
         return opt;
     }
+
+    @Override
+    public Long count() {
+
+        logger.info("Counting users on DynamoDB...");
+
+        var result = dynamoDbTemplate.scanAll(UserEntity.class);
+
+        logger.info("End of counting users on DynamoDB...");
+
+        return result.items().stream().count();
+    }
 }

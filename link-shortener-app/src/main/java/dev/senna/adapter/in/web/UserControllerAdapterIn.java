@@ -2,6 +2,8 @@ package dev.senna.adapter.in.web;
 
 import dev.senna.adapter.in.web.dto.request.CreateUserRequest;
 import dev.senna.adapter.in.web.dto.response.CreateUserResponse;
+import dev.senna.config.FeatureFlagConfig;
+import dev.senna.core.exception.ResourceNotAvailableException;
 import dev.senna.core.port.in.CreateUserPortIn;
 import dev.senna.core.port.in.DeleteUserPortIn;
 import jakarta.validation.Valid;
@@ -19,14 +21,20 @@ public class UserControllerAdapterIn {
 
     private final CreateUserPortIn createUserPortIn;
     private final DeleteUserPortIn deleteUserPortIn;
+    private final FeatureFlagConfig featureFlagConfig;
 
-    public UserControllerAdapterIn(CreateUserPortIn createUserPortIn, DeleteUserPortIn deleteUserPortIn) {
+    public UserControllerAdapterIn(CreateUserPortIn createUserPortIn, DeleteUserPortIn deleteUserPortIn, FeatureFlagConfig featureFlagConfig) {
         this.createUserPortIn = createUserPortIn;
         this.deleteUserPortIn = deleteUserPortIn;
+        this.featureFlagConfig = featureFlagConfig;
     }
 
     @PostMapping()
     public ResponseEntity<CreateUserResponse> createUser(@RequestBody @Valid CreateUserRequest req) {
+
+        if (!featureFlagConfig.getCreateUsersEnabled()) {
+            throw new ResourceNotAvailableException();
+        }
 
         var userCreated = createUserPortIn.execute(req.toDomain());
 
