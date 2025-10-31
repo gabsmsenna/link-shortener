@@ -2,8 +2,6 @@
 #export JAVA_HOME=<point to your jdk folder>
 #export M2_HOME=<point to your maven folder>
 
-set -e
-
 export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 export M2_HOME="/opt/maven"
 

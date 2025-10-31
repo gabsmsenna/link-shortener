@@ -1,6 +1,7 @@
 package dev.senna.adapter.out.persistence;
 
 import dev.senna.adapter.out.persistence.entities.LinkAnalyticsEntity;
+import dev.senna.config.CustomTableNameResolver;
 import dev.senna.core.domain.Link;
 import dev.senna.core.domain.LinkAnalytics;
 import dev.senna.core.port.out.AnalyticsRepositoryPortOut;
@@ -25,10 +26,12 @@ public class LinkAnalyticsDynamoDbAdapterOut implements AnalyticsRepositoryPortO
 
     private final DynamoDbTemplate dynamoDbTemplate;
     private final DynamoDbClient dynamoDbClient;
+    private final CustomTableNameResolver customTableNameResolver;
 
-    public LinkAnalyticsDynamoDbAdapterOut(DynamoDbTemplate dynamoDbTemplate, DynamoDbClient dynamoDbClient) {
+    public LinkAnalyticsDynamoDbAdapterOut(DynamoDbTemplate dynamoDbTemplate, DynamoDbClient dynamoDbClient, CustomTableNameResolver customTableNameResolver) {
         this.dynamoDbTemplate = dynamoDbTemplate;
         this.dynamoDbClient = dynamoDbClient;
+        this.customTableNameResolver = customTableNameResolver;
     }
 
     @Override
@@ -91,7 +94,7 @@ public class LinkAnalyticsDynamoDbAdapterOut implements AnalyticsRepositoryPortO
         );
 
         UpdateItemRequest request = UpdateItemRequest.builder()
-                .tableName("tb_links_analytics")
+                .tableName(customTableNameResolver.resolve(LinkAnalyticsEntity.class))
                 .key(key)
                 .updateExpression(String.format("SET %s = if_not_exists(%s, :zero) + :inc, updated_at = :now",
                         LINK_ANALYTICS_CLICKS,

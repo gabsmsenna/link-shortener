@@ -4,7 +4,7 @@ import dev.senna.core.domain.LinkAnalytics;
 
 import java.util.List;
 
-public record AnalyticsResponse(Long totalVisotors,
+public record AnalyticsResponse(Long totalVisitors,
                                 List<AnalyticsDayResponse> analyticsDay) {
 
     public static AnalyticsDayResponse fromDomain(LinkAnalytics linkAnalytics) {
